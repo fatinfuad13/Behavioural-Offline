@@ -23,13 +23,12 @@ public class ClosedState implements CourseState {
 
     @Override
     public boolean dropStudent(Student s) {
-        // Delegate drop to mediator
         RegistrarMediator.getInstance().dropStudent(course, s);
         return true;
     }
 
     @Override
-    public void setCapacity(int newCapacity) {
+    public void changedCapacity() {
         
     }
 

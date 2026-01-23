@@ -28,7 +28,7 @@ public class DraftState implements CourseState {
     }
 
     @Override
-    public void setCapacity(int newCapacity) {
+    public void changedCapacity() {
 
     }
 

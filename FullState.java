@@ -24,17 +24,17 @@ public boolean addToWaitlist(Student s) {
   @Override
 public boolean dropStudent(Student s) {
     RegistrarMediator.getInstance().dropStudent(course, s);
-    setCapacity(0);
+    changedCapacity();
     return true;
 }
 
 
 @Override
-public void setCapacity(int newCapacity) {
+public void changedCapacity() {
     if (course.getEnrolled().size() < course.getCapacity()) {
             course.setStatus(CourseStatus.OPEN);
         } else {
-            System.out.println(course.code + " over capacity; remains FULL.");
+            //System.out.println(course.code + " over capacity; remains FULL.");
         }
 }
 
@@ -42,7 +42,7 @@ public void setCapacity(int newCapacity) {
     public void setStatusAdmin(CourseStatus newStatus) {
         switch (newStatus) {
             case CLOSED:
-                // random promotion handled in course via mediator
+                
                 course.closeWithRandomWaitlistSelection(course.getCapacity());
                 break;
             case CANCELLED:
@@ -50,7 +50,7 @@ public void setCapacity(int newCapacity) {
                 RegistrarMediator.getInstance().cancelCourse(course);
                 break;
             default:
-                /*if(newStatus != CourseStatus.FULL)*/ System.out.println("Invalid transition from FULL to " + newStatus);
+                if(newStatus != CourseStatus.FULL) System.out.println("Invalid transition from FULL to " + newStatus);
         }
     }
 
@@ -67,7 +67,7 @@ public void setCapacity(int newCapacity) {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input; using current capacity.");
             }
-            // Always trigger the mediator to randomly promote waitlisted students
+            
             course.closeWithRandomWaitlistSelection(course.getCapacity());
         } else {
             setStatusAdmin(newStatus);

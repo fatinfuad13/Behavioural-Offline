@@ -28,14 +28,14 @@ public class OpenState implements CourseState {
 @Override
 public boolean tryEnroll(Student s) {
     RegistrarMediator.getInstance().enrollStudent(course, s);
-    setCapacity(0);
+    changedCapacity();
     return true;
 }
 
 
 @Override
 
-public void setCapacity(int newCapacity) {
+public void changedCapacity() {
     if (course.getEnrolled().size() >= course.getCapacity()) {
             course.setStatus(CourseStatus.FULL);
         }
@@ -50,7 +50,7 @@ public void setStatusAdmin(CourseStatus newStatus) {
         course.setStatus(CourseStatus.CANCELLED);
         RegistrarMediator.getInstance().cancelCourse(course);
     } else {
-        // suppress print for automatic FULL updates
+        
         if(newStatus != CourseStatus.FULL)
             System.out.println("Invalid transition from OPEN to " + newStatus);
     }

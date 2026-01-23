@@ -29,7 +29,7 @@ public class CancelledState implements CourseState {
     }
 
     @Override
-    public void setCapacity(int newCapacity) {
+    public void changedCapacity() {
         System.out.println("Course is CANCELLED; capacity change has no effect.");
     }
 

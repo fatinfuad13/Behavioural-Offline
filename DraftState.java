@@ -31,6 +31,7 @@ public class DraftState implements CourseState {
         if (newStatus == CourseStatus.OPEN || newStatus == CourseStatus.CLOSED) {
             course.transitionTo(newStatus);
         } else if (newStatus == CourseStatus.CANCELLED) {
+            course.transitionTo(newStatus);
             course.cancelCourseInternal();
         } else {
             System.out.println("Invalid transition from DRAFT to " + newStatus);

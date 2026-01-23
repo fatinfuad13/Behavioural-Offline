@@ -41,6 +41,7 @@ public class OpenState implements CourseState {
         course.setCapacityInternal(newCapacity);
         if (!course.hasSeatAvailable()) {
             course.transitionTo(CourseStatus.FULL);
+            System.out.println(course.code +" status changed to " + CourseStatus.FULL + "(at capacity).");
         }
     }
 
@@ -48,6 +49,7 @@ public class OpenState implements CourseState {
         if (newStatus == CourseStatus.CLOSED || newStatus == CourseStatus.DRAFT) {
             course.transitionTo(newStatus);
         } else if (newStatus == CourseStatus.CANCELLED) {
+            course.transitionTo(newStatus);
             course.cancelCourseInternal();
         } else {
             System.out.println("Invalid transition from OPEN to " + newStatus);

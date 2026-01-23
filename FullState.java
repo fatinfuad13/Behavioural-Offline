@@ -25,6 +25,7 @@ public class FullState implements CourseState {
         boolean changed = course.dropStudentInternal(s);
         if (course.hasSeatAvailable()) {
             course.transitionTo(CourseStatus.OPEN);
+            System.out.println(course.code +" status changed to " + CourseStatus.OPEN + "(capacity allows enrollment).");//
         }
         return changed;
     }
@@ -33,6 +34,7 @@ public class FullState implements CourseState {
         course.setCapacityInternal(newCapacity);
         if (course.hasSeatAvailable()) {
             course.transitionTo(CourseStatus.OPEN);
+             System.out.println(course.code +" status changed to " + CourseStatus.OPEN + "(capacity allows enrollment).");//
         }
     }
 
@@ -40,6 +42,7 @@ public class FullState implements CourseState {
         if (newStatus == CourseStatus.CLOSED) {
             course.closeWithRandomWaitlistSelectionInternal(course.getCapacity());
         } else if (newStatus == CourseStatus.CANCELLED) {
+            course.transitionTo(newStatus);
             course.cancelCourseInternal();
         } else {
             System.out.println("Invalid transition from FULL to " + newStatus);

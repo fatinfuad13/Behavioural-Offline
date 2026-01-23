@@ -30,8 +30,9 @@ public class ClosedState implements CourseState {
         if (newStatus == CourseStatus.OPEN || newStatus == CourseStatus.DRAFT) {
             course.transitionTo(newStatus);
         } else if (newStatus == CourseStatus.CANCELLED) {
+            course.transitionTo(newStatus);
             course.cancelCourseInternal();
-        } else {
+        }else {
             System.out.println("Invalid transition from CLOSED to " + newStatus);
         }
     }

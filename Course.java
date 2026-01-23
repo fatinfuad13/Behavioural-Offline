@@ -439,9 +439,11 @@ public boolean isVisibleToStudents() {
     // State transition helper
     // ---------------------------
     void transitionTo(CourseStatus newStatus) {
+        CourseStatus oldStatus = this.status;
         this.status = newStatus;
         this.state = createStateFromStatus(newStatus);
-        System.out.println(code + " transitioned to " + newStatus);
+        if(this.status != CourseStatus.FULL && this.status != CourseStatus.CANCELLED)
+            System.out.println(code + " transitioned " + oldStatus + " -> " + newStatus);
     }
 
     // ---------------------------

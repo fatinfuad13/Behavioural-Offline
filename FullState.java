@@ -24,29 +24,6 @@ public class FullState implements CourseState {
         return true;
     }
 
-    /*@Override
-    public boolean dropStudent(Student s) {
-        RegistrarMediator.getInstance().dropStudent(course, s);
-
-        if (course.hasSpace() && course.getStatus() != CourseStatus.CANCELLED) {
-            course.setStatus(CourseStatus.OPEN);
-            System.out.println(course.code + " status changed to OPEN (capacity allows enrollment).");
-        }
-        return true; // actual removal handled by mediator
-    }*/
-
-    /*@Override
-
-public void setCapacity(int newCapacity) {
-    // Delegate to mediator; no recursion
-    RegistrarMediator.getInstance().changeCourseCapacity(course, newCapacity);
-
-    // State transition logic
-    if (course.hasSpace() && course.getStatus() != CourseStatus.CANCELLED) {
-        course.setStatus(CourseStatus.OPEN);
-        System.out.println(course.code + " status changed to OPEN (capacity allows enrollment).");
-    }
-}*/
   @Override
 public boolean dropStudent(Student s) {
     RegistrarMediator.getInstance().dropStudent(course, s);
@@ -62,23 +39,12 @@ public boolean dropStudent(Student s) {
 
 @Override
 public void setCapacity(int newCapacity) {
-    /*RegistrarMediator.getInstance().changeCourseCapacity(course, newCapacity);
-
-    // Automatic FULL -> OPEN
-    if (course.hasSpace() && course.getStatus() != CourseStatus.CANCELLED) {
-        course.status = CourseStatus.OPEN;          // direct update
-        course.setState(new OpenState(course));
-        System.out.println(course.code + " status changed to OPEN (capacity allows enrollment).");
-    }*/
     if (course.getEnrolled().size() < course.getCapacity()) {
             course.setStatus(CourseStatus.OPEN);
         } else {
             System.out.println(course.code + " over capacity; remains FULL.");
         }
 }
-
-
-
 
     @Override
     public void setStatusAdmin(CourseStatus newStatus) {

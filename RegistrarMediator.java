@@ -14,9 +14,7 @@ public class RegistrarMediator {
         return instance;
     }
 
-    // -------------------------
-    // Enrollment
-    // -------------------------
+   
     public void enrollStudent(Course c, Student s) {
         if (c == null || s == null) return;
 
@@ -44,9 +42,6 @@ public class RegistrarMediator {
         }
     }
 
-    // -------------------------
-    // Waitlist
-    // -------------------------
     public void waitlistStudent(Course c, Student s) {
         if (c == null || s == null) return;
 
@@ -70,9 +65,7 @@ public class RegistrarMediator {
         System.out.println("Waitlisted: " + s.name + " for " + c.code);
     }
 
-    // -------------------------
-    // Drop a student
-    // -------------------------
+    
     public void dropStudent(Course c, Student s) {
         if (c == null || s == null) return;
 
@@ -114,9 +107,7 @@ public class RegistrarMediator {
         }
     }
 
-    // -------------------------
-    // Cancel course
-    // -------------------------
+    
     public void cancelCourse(Course c) {
         if (c == null) return;
 
@@ -134,9 +125,7 @@ public class RegistrarMediator {
         System.out.println(c.code + " has been CANCELLED. All students dropped and waitlist cleared.");
     }
 
-    // -------------------------
-    // Utility: random promotion
-    // -------------------------
+    
     public void promoteRandomFromWaitlist(Course c, int slots) {
         if (c == null || c.getWaitlist().isEmpty()) return;
 
@@ -177,19 +166,7 @@ public class RegistrarMediator {
     }
 }
 
-/*public void changeCourseCapacity(Course c, int newCapacity) {
-    if (newCapacity < 0) newCapacity = 0;
-    c.capacity = newCapacity;  // mediator has access since it's in same package
-    System.out.println("Setting capacity of " + c.code + " to " + newCapacity);
 
-    // Optionally auto-promote from waitlist
-    while (c.getEnrolledCount() < newCapacity && !c.getWaitlist().isEmpty()) {
-        Student s = c.getWaitlist().removeFirst();
-        c.getEnrolled().add(s);
-        s.addEnrolledCourseDirect(c);
-        System.out.println("Promoted " + s.name + " from waitlist to enrolled in " + c.code);
-    }
-}*/
 
 }
 

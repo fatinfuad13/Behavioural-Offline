@@ -1,9 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Collection;
-// basically maps student and course IDs to their respective objects
-// can add new student and new course through this and also retrieve them if given their ID 
-// but this does not handle the core logic of this app
 public class RegistrarSystem {
     private final Map<String, Student> students = new HashMap<>(); // 101 -> {101,Fatin,{enrolledCourses},{waitlistedCourses}}
     private final Map<String, Course> courses = new HashMap<>(); // 214 -> {code,title,capacity,{enrolled},{waitlisted},CourseStatus}
@@ -32,3 +29,7 @@ public class RegistrarSystem {
         return courses.values();
     }
 }
+
+// basically maps student and course IDs to their respective objects
+// can add new student and new course through this and also retrieve them if given their ID 
+// but this does not handle the core logic of this app

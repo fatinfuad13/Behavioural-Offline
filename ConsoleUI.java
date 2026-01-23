@@ -1,4 +1,4 @@
-import java.util.InputMismatchException;
+/*import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ConsoleUI {
@@ -174,4 +174,354 @@ public class ConsoleUI {
             System.out.println("  " + c.code + " - " + c.title + " | status=" + c.status + " | cap=" + c.getCapacity() + " | enrolled=" + c.getEnrolledCount() + " | waitlist=" + c.getWaitlistCount());
         }
     }
+}*/
+
+/*import java.util.Scanner;
+
+public class ConsoleUI {
+    private final RegistrarSystem registrar;
+    private final Scanner scanner = new Scanner(System.in);
+
+    public ConsoleUI(RegistrarSystem registrar) {
+        this.registrar = registrar;
+    }
+
+    public void start() {
+        while (true) {
+            System.out.println("\n=== University Course Registration System ===");
+            System.out.println("1. Student mode");
+            System.out.println("2. Admin mode");
+            System.out.println("0. Exit");
+            System.out.print("Choose: ");
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" : studentMode();
+                case "2" : adminMode();
+                case "0" : {
+                    System.out.println("Goodbye!");
+                    return;
+                }
+                default : System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    // -------------------------
+    // STUDENT MODE
+    // -------------------------
+    private void studentMode() {
+        System.out.print("Enter Student ID: ");
+        String id = scanner.nextLine().trim();
+        Student s = registrar.getStudent(id);
+
+        if (s == null) {
+            System.out.println("Student not found.");
+            return;
+        }
+
+        while (true) {
+            System.out.println("\n--- Student Mode: " + s.name + " (" + s.id + ") ---");
+            System.out.println("1. List available courses");
+            System.out.println("2. Add course by code");
+            System.out.println("3. Drop course by code");
+            System.out.println("4. View my schedule");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String c = scanner.nextLine().trim();
+
+            switch (c) {
+                case "1" : listAvailableCourses();
+                case "2" : {
+                    System.out.print("Course code: ");
+                    String addCode = scanner.nextLine().trim();
+                    Course courseToAdd = registrar.getCourse(addCode);
+                    if (courseToAdd == null) {
+                        System.out.println("Course not found.");
+                        break;
+                    }
+                    s.enrollIn(courseToAdd);
+                }
+                case "3" : {
+                    System.out.print("Course code: ");
+                    String dropCode = scanner.nextLine().trim();
+                    Course courseToDrop = registrar.getCourse(dropCode);
+                    if (courseToDrop == null) {
+                        System.out.println("Course not found.");
+                        break;
+                    }
+                    s.dropCourse(courseToDrop);
+                }
+                case "4" : s.printSchedule();
+                case "0" : { return; }
+                default : System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    // -------------------------
+    // ADMIN MODE
+    // -------------------------
+    private void adminMode() {
+        while (true) {
+            System.out.println("\n--- Admin Mode ---");
+            System.out.println("1. List ALL courses");
+            System.out.println("2. Change course status");
+            System.out.println("3. Set course capacity");
+            System.out.println("4. Print course roster");
+            System.out.println("5. Print course waitlist");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String c = scanner.nextLine().trim();
+
+            switch (c) {
+                case "1" : listAllCourses();
+                case "2" : {
+                    System.out.print("Course code: ");
+                    Course course = registrar.getCourse(scanner.nextLine().trim());
+                    if (course == null) { System.out.println("Course not found."); break; }
+                    System.out.println("Available statuses: DRAFT, OPEN, FULL, CLOSED, CANCELLED");
+                    System.out.print("New status: ");
+                    try {
+                        CourseStatus newStatus = CourseStatus.valueOf(scanner.nextLine().trim());
+                        course.setStatusAdminInteractive(newStatus, scanner);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid status.");
+                    }
+                }
+                case "3" : {
+                    System.out.print("Course code: ");
+                    Course courseCap = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseCap == null) { System.out.println("Course not found."); break; }
+                    System.out.print("New capacity: ");
+                    try {
+                        int cap = Integer.parseInt(scanner.nextLine().trim());
+                        courseCap.setCapacity(cap);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number.");
+                    }
+                }
+                case "4" : {
+                    System.out.print("Course code: ");
+                    Course courseR = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseR == null) { System.out.println("Course not found."); break; }
+                    courseR.printRoster();
+                }
+                case "5" : {
+                    System.out.print("Course code: ");
+                    Course courseW = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseW == null) { System.out.println("Course not found."); break; }
+                    courseW.printWaitlist();
+                }
+                case "0" : { return; }
+                default : System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    // -------------------------
+    // HELPER METHODS
+    // -------------------------
+    private void listAvailableCourses() {
+        System.out.println("Available courses (visible to students):");
+        for (Course c : registrar.getAllCourses()) {
+            if (c.isVisibleToStudents()) {
+                System.out.println("  " + c.code + " - " + c.title +
+                        " | status=" + c.getStatus() +
+                        " | cap=" + c.getCapacity() +
+                        " | enrolled=" + c.getEnrolledCount() +
+                        " | waitlist=" + c.getWaitlistCount());
+            }
+        }
+    }
+
+    private void listAllCourses() {
+        System.out.println("All courses:");
+        for (Course c : registrar.getAllCourses()) {
+            System.out.println("  " + c.code + " - " + c.title +
+                    " | status=" + c.getStatus() +
+                    " | cap=" + c.getCapacity() +
+                    " | enrolled=" + c.getEnrolledCount() +
+                    " | waitlist=" + c.getWaitlistCount());
+        }
+    }
+}*/
+
+import java.util.Scanner;
+
+public class ConsoleUI {
+    private final RegistrarSystem registrar;
+    private final Scanner scanner = new Scanner(System.in);
+
+    public ConsoleUI(RegistrarSystem registrar) {
+        this.registrar = registrar;
+    }
+
+    public void start() {
+        while (true) {
+            System.out.println("\n=== University Course Registration System ===");
+            System.out.println("1. Student mode");
+            System.out.println("2. Admin mode");
+            System.out.println("0. Exit");
+            System.out.print("Choose: ");
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1" : studentMode(); break;
+                case "2" : adminMode(); break;
+                case "0" : {
+                    System.out.println("Goodbye!");
+                    return;
+                }
+                default : System.out.println("Invalid option."); break;
+            }
+        }
+    }
+
+    // -------------------------
+    // STUDENT MODE
+    // -------------------------
+    private void studentMode() {
+        System.out.print("Enter Student ID: ");
+        String id = scanner.nextLine().trim();
+        Student s = registrar.getStudent(id);
+
+        if (s == null) {
+            System.out.println("Student not found.");
+            return;
+        }
+
+        while (true) {
+            System.out.println("\n--- Student Mode: " + s.name + " (" + s.id + ") ---");
+            System.out.println("1. List available courses");
+            System.out.println("2. Add course by code");
+            System.out.println("3. Drop course by code");
+            System.out.println("4. View my schedule");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String c = scanner.nextLine().trim();
+
+            switch (c) {
+                case "1" : listAvailableCourses(); break;
+                case "2" : {
+                    System.out.print("Course code: ");
+                    String addCode = scanner.nextLine().trim();
+                    Course courseToAdd = registrar.getCourse(addCode);
+                    if (courseToAdd == null) {
+                        System.out.println("Course not found.");
+                        break;
+                    }
+                    s.enrollIn(courseToAdd);
+                    break;
+                }
+                case "3" : {
+                    System.out.print("Course code: ");
+                    String dropCode = scanner.nextLine().trim();
+                    Course courseToDrop = registrar.getCourse(dropCode);
+                    if (courseToDrop == null) {
+                        System.out.println("Course not found.");
+                        break;
+                    }
+                    s.dropCourse(courseToDrop);
+                    break;
+                }
+                case "4" : s.printSchedule(); break;
+                case "0" : return;
+                default : System.out.println("Invalid option."); break;
+            }
+        }
+    }
+
+    // -------------------------
+    // ADMIN MODE
+    // -------------------------
+    private void adminMode() {
+        while (true) {
+            System.out.println("\n--- Admin Mode ---");
+            System.out.println("1. List ALL courses");
+            System.out.println("2. Change course status");
+            System.out.println("3. Set course capacity");
+            System.out.println("4. Print course roster");
+            System.out.println("5. Print course waitlist");
+            System.out.println("0. Back");
+            System.out.print("Choose: ");
+            String c = scanner.nextLine().trim();
+
+            switch (c) {
+                case "1" : listAllCourses(); break;
+                case "2" : {
+                    System.out.print("Course code: ");
+                    Course course = registrar.getCourse(scanner.nextLine().trim());
+                    if (course == null) { System.out.println("Course not found."); break; }
+                    System.out.println("Available statuses: DRAFT, OPEN, FULL, CLOSED, CANCELLED");
+                    System.out.print("New status: ");
+                    try {
+                        CourseStatus newStatus = CourseStatus.valueOf(scanner.nextLine().trim());
+                        course.setStatusAdminInteractive(newStatus, scanner);
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("Invalid status.");
+                    }
+                    break;
+                }
+                case "3" : {
+                    System.out.print("Course code: ");
+                    Course courseCap = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseCap == null) { System.out.println("Course not found."); break; }
+                    System.out.print("New capacity: ");
+                    try {
+                        int cap = Integer.parseInt(scanner.nextLine().trim());
+                        courseCap.setCapacity(cap);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Invalid number.");
+                    }
+                    break;
+                }
+                case "4" : {
+                    System.out.print("Course code: ");
+                    Course courseR = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseR == null) { System.out.println("Course not found."); break; }
+                    courseR.printRoster();
+                    break;
+                }
+                case "5" : {
+                    System.out.print("Course code: ");
+                    Course courseW = registrar.getCourse(scanner.nextLine().trim());
+                    if (courseW == null) { System.out.println("Course not found."); break; }
+                    courseW.printWaitlist();
+                    break;
+                }
+                case "0" : return;
+                default : System.out.println("Invalid option."); break;
+            }
+        }
+    }
+
+    // -------------------------
+    // HELPER METHODS
+    // -------------------------
+    private void listAvailableCourses() {
+        System.out.println("Available courses (visible to students):");
+        for (Course c : registrar.getAllCourses()) {
+            if (c.isVisibleToStudents()) {
+                System.out.println("  " + c.code + " - " + c.title +
+                        " | status=" + c.getStatus() +
+                        " | cap=" + c.getCapacity() +
+                        " | enrolled=" + c.getEnrolledCount() +
+                        " | waitlist=" + c.getWaitlistCount());
+            }
+        }
+    }
+
+    private void listAllCourses() {
+        System.out.println("All courses:");
+        for (Course c : registrar.getAllCourses()) {
+            System.out.println("  " + c.code + " - " + c.title +
+                    " | status=" + c.getStatus() +
+                    " | cap=" + c.getCapacity() +
+                    " | enrolled=" + c.getEnrolledCount() +
+                    " | waitlist=" + c.getWaitlistCount());
+        }
+    }
 }
+
+

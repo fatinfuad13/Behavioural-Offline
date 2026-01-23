@@ -1,5 +1,5 @@
 import java.util.Scanner;
-
+// Done
 public class OpenState implements CourseState {
 
     private final Course course;
@@ -24,34 +24,14 @@ public class OpenState implements CourseState {
     public void setStatusAdminInteractive(CourseStatus newStatus, Scanner sc) {
         setStatusAdmin(newStatus);
     }
-    @Override
+   
+@Override
 public boolean tryEnroll(Student s) {
-    if (course.getEnrolled().contains(s)) {
-        System.out.println("Already enrolled: " + s.name + " in " + course.code);
-        return true;
-    }
-
-    if (course.hasSpace()) {
-        RegistrarMediator.getInstance().enrollStudent(course, s);
-
-        // Only print if course becomes full now (automatic)
-        if (!course.hasSpace() && course.status != CourseStatus.FULL) {
-            course.status = CourseStatus.FULL;   // direct update, bypass setStatus
-            course.setState(new FullState(course));
-            System.out.println(course.code + " is now FULL.");
-        }
-
-        return true;
-    }
-
-    // No need to set FULL again if course is already full
-    if (course.status != CourseStatus.FULL) {
-        course.status = CourseStatus.FULL;       // direct update
-        course.setState(new FullState(course));
-        System.out.println(course.code + " reached capacity; status set to FULL. Try waitlisting.");
-    }
-    return false;
+    RegistrarMediator.getInstance().enrollStudent(course, s);
+    setCapacity(0);
+    return true;
 }
+
 
 @Override
 

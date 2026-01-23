@@ -18,19 +18,11 @@ public class Student {
     // -------------------
     public void enrollIn(Course c) {
         if (c == null) return;
-        if (!c.isVisibleToStudents()) {
-            System.out.println("Course " + c.code + " is not available for student enrollment.");
-            return;
-        }
         c.getState().tryEnroll(this); // state will use mediator
     }
 
     public void waitlistFor(Course c) {
         if (c == null) return;
-        if (!c.isVisibleToStudents()) {
-            System.out.println("Course " + c.code + " is not available.");
-            return;
-        }
         c.getState().addToWaitlist(this); // state will use mediator
     }
 

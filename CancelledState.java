@@ -1,7 +1,7 @@
 
 
 import java.util.Scanner;
-
+// Done
 public class CancelledState implements CourseState {
 
     private final Course course;
@@ -38,7 +38,7 @@ public class CancelledState implements CourseState {
         if (newStatus == CourseStatus.DRAFT) {
             course.setStatus(CourseStatus.DRAFT);
         } else {
-            System.out.println("Invalid: CANCELLED can only transition to DRAFT for " + course.code);
+            if(newStatus != CourseStatus.CANCELLED) System.out.println("Invalid: CANCELLED can only transition to DRAFT for " + course.code);
         }
     }
 

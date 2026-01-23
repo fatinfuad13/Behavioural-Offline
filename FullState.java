@@ -15,27 +15,19 @@ public class FullState implements CourseState {
     }
 
     @Override
-    public boolean addToWaitlist(Student s) {
-        if (course.getEnrolled().contains(s) || course.getWaitlist().contains(s)) {
-            System.out.println("Already enrolled or waitlisted: " + s.name + " for " + course.code);
-            return false;
-        }
-        RegistrarMediator.getInstance().waitlistStudent(course, s);
-        return true;
-    }
+public boolean addToWaitlist(Student s) {
+    RegistrarMediator.getInstance().waitlistStudent(course, s);
+    return true;
+}
+
 
   @Override
 public boolean dropStudent(Student s) {
     RegistrarMediator.getInstance().dropStudent(course, s);
-
-    // Automatic FULL -> OPEN
-    if (course.hasSpace() && course.getStatus() != CourseStatus.CANCELLED) {
-        course.status = CourseStatus.OPEN;          // direct update
-        course.setState(new OpenState(course));
-        System.out.println(course.code + " status changed to OPEN (capacity allows enrollment).");
-    }
-    return true; // removal handled by mediator
+    setCapacity(0);
+    return true;
 }
+
 
 @Override
 public void setCapacity(int newCapacity) {
@@ -58,7 +50,7 @@ public void setCapacity(int newCapacity) {
                 RegistrarMediator.getInstance().cancelCourse(course);
                 break;
             default:
-                System.out.println("Invalid transition from FULL to " + newStatus);
+                /*if(newStatus != CourseStatus.FULL)*/ System.out.println("Invalid transition from FULL to " + newStatus);
         }
     }
 

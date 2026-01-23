@@ -1,6 +1,6 @@
 
 import java.util.Scanner;
-
+// Done
 public class DraftState implements CourseState {
 
     private final Course course;

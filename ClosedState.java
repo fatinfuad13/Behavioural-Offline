@@ -1,6 +1,6 @@
 
 import java.util.Scanner;
-
+// Done
 public class ClosedState implements CourseState {
 
     private final Course course;

@@ -36,6 +36,7 @@ public class RegistrarMediator {
             // Check if course is now full
             if (c.getEnrolledCount() >= c.getCapacity()) {
                 c.setStatusAdmin(CourseStatus.FULL);
+                System.out.println(c.code + " is now FULL.");
             }
         } else {
             System.out.println("Course " + c.code + " is full. Cannot enroll.");
@@ -85,7 +86,7 @@ public class RegistrarMediator {
                 System.out.println("Promoted from waitlist: " + promoted.name + " into " + c.code);
             }
 
-            // Adjust course status
+            // Adjust course status // Maybe use CourseStatus
             if (c.getEnrolledCount() >= c.getCapacity()) {
                 c.setStatusAdmin(CourseStatus.FULL);
             } else if (c.getEnrolledCount() < c.getCapacity()
@@ -111,7 +112,6 @@ public class RegistrarMediator {
     public void cancelCourse(Course c) {
         if (c == null) return;
 
-        // Drop all enrolled and waitlisted students
         for (Student s : new ArrayList<>(c.getEnrolled())) {
             s.removeCourseDirect(c);
         }

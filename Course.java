@@ -1,5 +1,4 @@
 
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,8 +9,8 @@ public class Course {
     public final String title;
 
     // Mutable data
-    public int capacity; ///////
-    public CourseStatus status; ///////
+    private int capacity; ///////
+    public CourseStatus status;
     private CourseState state;
 
     // Student tracking (lists managed via mediator)

@@ -64,7 +64,8 @@ public class Course {
 
     public void setState(CourseState state) {
     this.state = state;
-    this.status = state.getStatus();   // enum mirrors state
+    ////// this.status = state.getStatus();   // enum mirrors state
+    this.setStatus(state.getStatus());
 }
 
     public CourseState getState() {
@@ -72,6 +73,23 @@ public class Course {
     }
 
    public void setStatus(CourseStatus newStatus) {
+
+    /*CourseStatus oldStatus = this.status;
+
+    if (oldStatus == newStatus) return;
+
+    this.status = newStatus;   // mirror only
+
+    if (newStatus == CourseStatus.CANCELLED)
+        return;
+
+    // Print meaningful transitions (same logic you had)
+    if (!(oldStatus == CourseStatus.OPEN && newStatus == CourseStatus.FULL)
+        && !(oldStatus == CourseStatus.FULL && newStatus == CourseStatus.FULL)) {
+
+        System.out.println(code + " transitioned " + oldStatus + " -> " + newStatus);
+    }*/
+   
 
     CourseStatus oldStatus = this.status;
 
@@ -82,13 +100,26 @@ public class Course {
     if (newStatus == CourseStatus.CANCELLED)
         return;
 
+    // Special case: FULL -> OPEN via capacity change
+    if (oldStatus == CourseStatus.FULL && newStatus == CourseStatus.OPEN) {
+        System.out.println(code + " status changed to OPEN (capacity allows enrollment).");
+        return;
+    }
+
+    // Special case: CANCELLED -> DRAFT (reinstating)
+    if (oldStatus == CourseStatus.CANCELLED && newStatus == CourseStatus.DRAFT) {
+        System.out.println(code + " transitioned CANCELLED -> DRAFT (reinstating course)");
+        return;
+    }
+
     // Print meaningful transitions (same logic you had)
-    /*if (!(oldStatus == CourseStatus.OPEN && newStatus == CourseStatus.FULL)
-        && !(oldStatus == CourseStatus.FULL && newStatus == CourseStatus.FULL))*/ {
+    if (!(oldStatus == CourseStatus.OPEN && newStatus == CourseStatus.FULL)
+        && !(oldStatus == CourseStatus.FULL && newStatus == CourseStatus.FULL)) {
 
         System.out.println(code + " transitioned " + oldStatus + " -> " + newStatus);
     }
 }
+
 
     public CourseStatus getStatus() {
         return status;

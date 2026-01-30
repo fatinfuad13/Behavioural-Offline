@@ -169,7 +169,12 @@ public void setStatusAdmin(CourseStatus newStatus) {
             break;
         default:
             if (newStatus != CourseStatus.FULL)
-                System.out.println("Invalid transition from FULL to " + newStatus);
+            {
+                if(newStatus == CourseStatus.OPEN) 
+                    System.out.println("Invalid transition from FULL to " + newStatus +  " (FULL->OPEN is automatic on drop)");
+                else
+                    System.out.println("Invalid transition from FULL to " + newStatus);
+            }
             break;
     }
 }

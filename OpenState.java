@@ -111,7 +111,7 @@ public void setStatusAdmin(CourseStatus newStatus) {
             RegistrarMediator.getInstance().cancelCourse(course);
             break;
         default:
-            if (newStatus != CourseStatus.FULL)
+            //if (newStatus != CourseStatus.FULL)
                 System.out.println("Invalid transition from OPEN to " + newStatus);
             break;
     }

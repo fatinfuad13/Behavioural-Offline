@@ -7,107 +7,42 @@ public class RegistrarMediator {
 
     private static RegistrarMediator instance;
 
-    private RegistrarMediator() {}
+    private RegistrarMediator() 
+    {
+
+    }
 
     public static RegistrarMediator getInstance() {
-        if (instance == null) instance = new RegistrarMediator();
+        if (instance == null) 
+            instance = new RegistrarMediator();
         return instance;
     }
 
    
     public void enrollStudent(Course c, Student s) {
-        if (c == null || s == null) return;
-
-        if (c.getState() instanceof CancelledState || c.getState() instanceof DraftState) {
-            System.out.println("Cannot enroll; course " + c.code + " is not open for enrollment.");
+        if (c == null || s == null)
             return;
-        }
 
-        if (c.getEnrolled().contains(s)) {
-            System.out.println(s.name + " is already enrolled in " + c.code);
-            return;
-        }
-
-        if (c.getEnrolledCount() < c.getCapacity()) {
-            c.getEnrolled().add(s);
-            s.addEnrolledCourseDirect(c);
-            System.out.println("Enrolled: " + s.name + " in " + c.code);
-
-            // Check if course is now full
-            if (c.getEnrolledCount() >= c.getCapacity()) {
-                c.setStatusAdmin(CourseStatus.FULL);
-                System.out.println(c.code + " is now FULL.");
-            }
-        } else {
-            System.out.println("Course " + c.code + " is full. Cannot enroll.");
-        }
+        //c.getEnrolled().add(s);
+        s.addEnrolledCourseDirect(c);
     }
 
-    public void waitlistStudent(Course c, Student s) {
-        if (c == null || s == null) return;
 
-        if (c.getState() instanceof CancelledState || c.getState() instanceof DraftState) {
-            System.out.println("Cannot waitlist; course " + c.code + " is not open for waitlisting.");
-            return;
-        }
+    public void waitlistStudent(Student s, Course c) {
+    if (s == null || c == null) return;
 
-        if (c.getWaitlist().contains(s)) {
-            System.out.println(s.name + " is already waitlisted for " + c.code);
-            return;
-        }
-
-        if (c.getEnrolled().contains(s)) {
-            System.out.println(s.name + " is already enrolled in " + c.code+ "; cannot waitlist.");
-            return;
-        }
-
-        c.getWaitlist().add(s);
+    // Mediator handles the cross-object update
+    if (!s.getWaitlistedCourses().contains(c)) {
         s.addWaitlistCourseDirect(c);
-        System.out.println("Waitlisted: " + s.name + " for " + c.code);
     }
+}
+
 
     
-    public void dropStudent(Course c, Student s) {
-        if (c == null || s == null) return;
-
-        boolean removed = false;
-
-        // Remove from enrolled
-        if (c.getEnrolled().remove(s)) {
-            s.removeCourseDirect(c);
-            System.out.println("Dropped from enrolled: " + s.name + " from " + c.code);
-            removed = true;
-
-            // Promote one from waitlist if space
-            if (!c.getWaitlist().isEmpty() && c.getEnrolledCount() < c.getCapacity()) {
-                Student promoted = c.getWaitlist().removeFirst();
-                c.getEnrolled().add(promoted);
-                promoted.addEnrolledCourseDirect(c);
-                System.out.println("Promoted from waitlist: " + promoted.name + " into " + c.code);
-            }
-
-            // Adjust course status // Maybe use CourseStatus
-            if (c.getEnrolledCount() >= c.getCapacity()) {
-                c.setStatusAdmin(CourseStatus.FULL);
-            } else if (c.getEnrolledCount() < c.getCapacity()
-                    && !(c.getState() instanceof DraftState)
-                    && !(c.getState() instanceof CancelledState)) {
-                c.setStatusAdmin(CourseStatus.OPEN);
-            }
-        }
-
-        // Remove from waitlist if present
-        if (c.getWaitlist().remove(s)) {
-            s.removeCourseDirect(c);
-            System.out.println("Removed from waitlist: " + s.name + " for " + c.code);
-            removed = true;
-        }
-
-        if (!removed) {
-            System.out.println(s.name + " is neither enrolled nor waitlisted for " + c.code);
-        }
-    }
-
+    public void dropStudent(Course c,Student s) {
+    if (s == null || c == null) return;
+    s.removeCourseDirect(c);
+}
     
     public void cancelCourse(Course c) {
         if (c == null) return;
@@ -120,13 +55,13 @@ public class RegistrarMediator {
         }
         c.getEnrolled().clear();
         c.getWaitlist().clear();
-        c.setStatusAdmin(CourseStatus.CANCELLED);
+        //c.setStatusAdmin(CourseStatus.CANCELLED);
 
         System.out.println(c.code + " has been CANCELLED. All students dropped and waitlist cleared.");
     }
 
     
-    public void promoteRandomFromWaitlist(Course c, int slots) {
+    /*public void promoteRandomFromWaitlist(Course c, int slots) {
         if (c == null || c.getWaitlist().isEmpty()) return;
 
         Random random = new Random();
@@ -164,7 +99,7 @@ public class RegistrarMediator {
         s.addEnrolledCourseDirect(c);
         System.out.println("  Randomly selected: " + s.name + " for " + c.code);
     }
-}
+}*/
 
 
 

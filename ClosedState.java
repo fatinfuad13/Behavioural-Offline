@@ -22,35 +22,75 @@ public class ClosedState implements CourseState {
     }
 
     @Override
-    public boolean dropStudent(Student s) {
-        RegistrarMediator.getInstance().dropStudent(course, s);
-        return true;
+public boolean dropStudent(Student s) {
+    if (s == null) return false;
+
+    boolean removed = false;
+
+    // Only allow removing from enrolled or waitlist
+    if (course.getEnrolled().remove(s)) {
+        System.out.println("Dropped from enrolled: " + s.name + " from " + course.code);
+        removed = true;
     }
 
-    @Override
-    public void changedCapacity() {
-        
+    if (course.getWaitlist().remove(s)) {
+        System.out.println("Removed from waitlist: " + s.name + " for " + course.code);
+        removed = true;
     }
 
-    @Override
-    public void setStatusAdmin(CourseStatus newStatus) {
-        switch (newStatus) {
-            case OPEN:
-            case DRAFT:
-                course.setStatus(newStatus);
-                break;
-            case CANCELLED:
-                course.setStatus(CourseStatus.CANCELLED);
-                RegistrarMediator.getInstance().cancelCourse(course);
-                break;
-            default:
-                System.out.println("Invalid transition from CLOSED to " + newStatus);
-        }
+    if (!removed) {
+        System.out.println(s.name + " is neither enrolled nor waitlisted for " + course.code);
+        return false;
     }
+
+    // Cross-object update
+    RegistrarMediator.getInstance().dropStudent(course,s);
+
+    return true;
+}
+
+@Override
+public void changedCapacity() {
+    // CLOSED state: capacity changes do not affect status
+}
+
+
+    @Override
+public void setStatusAdmin(CourseStatus newStatus) {
+
+    switch (newStatus) {
+
+        case OPEN:
+            course.setState(new OpenState(course));
+            course.setStatus(CourseStatus.OPEN);
+            break;
+
+        case DRAFT:
+            course.setState(new DraftState(course));
+            course.setStatus(CourseStatus.DRAFT);
+            break;
+
+        case CANCELLED:
+            course.setState(new CancelledState(course));
+            course.setStatus(CourseStatus.CANCELLED);
+            RegistrarMediator.getInstance().cancelCourse(course);
+            break;
+
+        default:
+            System.out.println("Invalid transition from CLOSED to " + newStatus);
+    }
+}
+
 
     @Override
     public void setStatusAdminInteractive(CourseStatus s, Scanner sc) {
         setStatusAdmin(s);
+    }
+
+    @Override
+    public CourseStatus getStatus()
+    {
+        return CourseStatus.CLOSED;
     }
 }
 

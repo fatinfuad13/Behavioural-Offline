@@ -7,4 +7,5 @@ public interface CourseState {
     public void changedCapacity();
     public void setStatusAdmin(CourseStatus newStatus);
     public void setStatusAdminInteractive(CourseStatus newStatus, Scanner scanner);
+    public CourseStatus getStatus();
 }

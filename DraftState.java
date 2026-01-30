@@ -32,25 +32,37 @@ public class DraftState implements CourseState {
 
     }
 
-    @Override
-    public void setStatusAdmin(CourseStatus newStatus) {
-        switch (newStatus) {
-            case OPEN:
-            case CLOSED:
-                course.setStatus(newStatus);
-                break;
-            case CANCELLED:
-                course.setStatus(CourseStatus.CANCELLED);
-                RegistrarMediator.getInstance().cancelCourse(course);
-                break;
-            default:
-                System.out.println("Invalid transition from DRAFT to " + newStatus);
-        }
+   @Override
+public void setStatusAdmin(CourseStatus newStatus) {
+    switch (newStatus) {
+        case OPEN:
+            course.setState(new OpenState(course));
+            course.setStatus(CourseStatus.OPEN);
+            break;
+        case CLOSED:
+            course.setState(new ClosedState(course));
+            course.setStatus(CourseStatus.CLOSED);
+            break;
+        case CANCELLED:
+            course.setState(new CancelledState(course));
+            course.setStatus(CourseStatus.CANCELLED);
+            RegistrarMediator.getInstance().cancelCourse(course);
+            break;
+        default:
+            System.out.println("Invalid transition from DRAFT to " + newStatus);
+            break;
     }
+}
 
     @Override
     public void setStatusAdminInteractive(CourseStatus s, Scanner sc) {
         setStatusAdmin(s);
+    }
+
+    @Override
+    public CourseStatus getStatus()
+    {
+      return CourseStatus.DRAFT;
     }
 }
 

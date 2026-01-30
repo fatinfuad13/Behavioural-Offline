@@ -74,4 +74,10 @@ public class Student {
             }
         }
     }
+
+
+    public List<Course> getWaitlistedCourses()
+    {
+        return waitlistedCourses;
+    }
 }

@@ -42,29 +42,9 @@ public class Course {
 
 }
 
-    /*private void syncStateWithStatus() {
-    switch (status) {
-        case DRAFT:
-            setState(new DraftState(this));
-            break;
-        case OPEN:
-            setState(new OpenState(this));
-            break;
-        case FULL:
-            setState(new FullState(this));
-            break;
-        case CLOSED:
-            setState(new ClosedState(this));
-            break;
-        case CANCELLED:
-            setState(new CancelledState(this));
-            break;
-    }
-}*/
-
     public void setState(CourseState state) {
     this.state = state;
-    ////// this.status = state.getStatus();   // enum mirrors state
+   
     this.setStatus(state.getStatus());
 }
 
@@ -74,21 +54,7 @@ public class Course {
 
    public void setStatus(CourseStatus newStatus) {
 
-    /*CourseStatus oldStatus = this.status;
-
-    if (oldStatus == newStatus) return;
-
-    this.status = newStatus;   // mirror only
-
-    if (newStatus == CourseStatus.CANCELLED)
-        return;
-
-    // Print meaningful transitions (same logic you had)
-    if (!(oldStatus == CourseStatus.OPEN && newStatus == CourseStatus.FULL)
-        && !(oldStatus == CourseStatus.FULL && newStatus == CourseStatus.FULL)) {
-
-        System.out.println(code + " transitioned " + oldStatus + " -> " + newStatus);
-    }*/
+   
    
 
     CourseStatus oldStatus = this.status;
@@ -145,10 +111,7 @@ public class Course {
     public int getEnrolledCount() { return enrolled.size(); }
     public int getWaitlistCount() { return waitlist.size(); }
 
-    //public boolean tryEnroll(Student s) { return state.tryEnroll(s); }
-    //public boolean addToWaitlist(Student s) { return state.addToWaitlist(s); }
-    //public boolean dropStudent(Student s) { return state.dropStudent(s); }
-
+ 
     public void setStatusAdmin(CourseStatus newStatus) { state.setStatusAdmin(newStatus); }
     public void setStatusAdminInteractive(CourseStatus newStatus, Scanner sc) {
         state.setStatusAdminInteractive(newStatus, sc);

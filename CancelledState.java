@@ -1,7 +1,7 @@
 
-
 import java.util.Scanner;
-// Done
+
+
 public class CancelledState implements CourseState {
 
     private final Course course;
@@ -33,17 +33,16 @@ public class CancelledState implements CourseState {
         System.out.println("Course is CANCELLED; capacity change has no effect.");
     }
 
-   @Override
-public void setStatusAdmin(CourseStatus newStatus) {
-    if (newStatus == CourseStatus.DRAFT) {
-        // transition to DraftState
-        course.setState(new DraftState(course));
-        course.setStatus(CourseStatus.DRAFT);
-    } else {
-        System.out.println("Invalid: CANCELLED can only transition to DRAFT for " + course.code);
+    @Override
+    public void setStatusAdmin(CourseStatus newStatus) {
+        if (newStatus == CourseStatus.DRAFT) {
+            // transition to DraftState
+            course.setState(new DraftState(course));
+            course.setStatus(CourseStatus.DRAFT);
+        } else {
+            System.out.println("Invalid: CANCELLED can only transition to DRAFT for " + course.code);
+        }
     }
-}
-
 
     @Override
     public void setStatusAdminInteractive(CourseStatus s, Scanner sc) {
@@ -51,9 +50,7 @@ public void setStatusAdmin(CourseStatus newStatus) {
     }
 
     @Override
-    public CourseStatus getStatus()
-    {
+    public CourseStatus getStatus() {
         return CourseStatus.CANCELLED;
     }
 }
-

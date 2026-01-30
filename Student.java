@@ -13,27 +13,24 @@ public class Student {
         this.name = name;
     }
 
-    // -------------------
-    // Student actions (delegate to mediator via state)
-    // -------------------
     public void enrollIn(Course c) {
-        if (c == null) return;
-        c.getState().tryEnroll(this); // state will use mediator
+        if (c == null)
+            return;
+        RegistrarMediator.getInstance().enrollRequest(this, c);
     }
 
     public void waitlistFor(Course c) {
-        if (c == null) return;
-        c.getState().addToWaitlist(this); // state will use mediator
+        if (c == null)
+            return;
+        RegistrarMediator.getInstance().waitlistRequest(this, c);
     }
 
     public void dropCourse(Course c) {
-        if (c == null) return;
-        c.getState().dropStudent(this); // state will use mediator
+        if (c == null)
+            return;
+        RegistrarMediator.getInstance().dropRequest(this, c);
     }
 
-    // -------------------
-    // Called by mediator to update student's lists
-    // -------------------
     public void addEnrolledCourseDirect(Course c) {
         if (!enrolledCourses.contains(c)) {
             enrolledCourses.add(c);
@@ -75,9 +72,7 @@ public class Student {
         }
     }
 
-
-    public List<Course> getWaitlistedCourses()
-    {
+    public List<Course> getWaitlistedCourses() {
         return waitlistedCourses;
     }
 }

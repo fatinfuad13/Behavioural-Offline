@@ -37,15 +37,12 @@ public void setStatusAdmin(CourseStatus newStatus) {
     switch (newStatus) {
         case OPEN:
             course.setState(new OpenState(course));
-            course.setStatus(CourseStatus.OPEN);
             break;
         case CLOSED:
             course.setState(new ClosedState(course));
-            course.setStatus(CourseStatus.CLOSED);
             break;
         case CANCELLED:
             course.setState(new CancelledState(course));
-            course.setStatus(CourseStatus.CANCELLED);
             RegistrarMediator.getInstance().cancelCourse(course);
             break;
         default:

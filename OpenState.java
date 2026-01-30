@@ -29,7 +29,7 @@ public boolean dropStudent(Student s) {
         changedCapacity();
     }
 
-    // Remove from waitlist (should rarely happen in OPEN, but just in case)
+    // Remove from waitlist
     if (course.getWaitlist().remove(s)) {
         System.out.println("Removed from waitlist: " + s.name + " for " + course.code);
         removed = true;
@@ -54,10 +54,8 @@ public void changedCapacity() {
     if (enrolledCount >= capacity) {
         // Transition from OPEN → FULL
         course.setState(new FullState(course));
-        course.setStatus(CourseStatus.FULL);
         System.out.println(course.code + " status changed to FULL (at capacity).");
     }
-    // If enrollment drops below capacity, stays OPEN — no change needed
 }
 
 
@@ -81,10 +79,8 @@ public boolean tryEnroll(Student s) {
 
     System.out.println("Enrolled: " + s.name + " in " + course.code);
 
-    // NOW check if full
     if (course.getEnrolledCount() == course.getCapacity()) {
         course.setState(new FullState(course));
-        course.setStatus(CourseStatus.FULL);
         System.out.println(course.code + " is now FULL.");
     }
 
@@ -99,15 +95,12 @@ public void setStatusAdmin(CourseStatus newStatus) {
     switch (newStatus) {
         case CLOSED:
             course.setState(new ClosedState(course));
-            course.setStatus(CourseStatus.CLOSED);
             break;
         case DRAFT:
             course.setState(new DraftState(course));
-            course.setStatus(CourseStatus.DRAFT);
             break;
         case CANCELLED:
             course.setState(new CancelledState(course));
-            course.setStatus(CourseStatus.CANCELLED);
             RegistrarMediator.getInstance().cancelCourse(course);
             break;
         default:

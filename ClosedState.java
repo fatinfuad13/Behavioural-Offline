@@ -51,7 +51,7 @@ public boolean dropStudent(Student s) {
 
 @Override
 public void changedCapacity() {
-    // CLOSED state: capacity changes do not affect status
+    // capacity changes do not affect status
 }
 
 
@@ -62,17 +62,14 @@ public void setStatusAdmin(CourseStatus newStatus) {
 
         case OPEN:
             course.setState(new OpenState(course));
-            course.setStatus(CourseStatus.OPEN);
             break;
 
         case DRAFT:
             course.setState(new DraftState(course));
-            course.setStatus(CourseStatus.DRAFT);
             break;
 
         case CANCELLED:
             course.setState(new CancelledState(course));
-            course.setStatus(CourseStatus.CANCELLED);
             RegistrarMediator.getInstance().cancelCourse(course);
             break;
 
